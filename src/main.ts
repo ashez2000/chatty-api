@@ -1,5 +1,6 @@
 import http from 'http';
 import mongoose from 'mongoose';
+import io from 'socket.io';
 
 import app from './app';
 import * as config from './config';
@@ -17,6 +18,9 @@ async function main() {
   server.listen(config.PORT, () => {
     console.log(`Server is listening on port ${config.PORT}`);
   });
+
+  // Start socket.io
+  const socket = new io.Server(server);
 }
 
 main().catch((err) => {
