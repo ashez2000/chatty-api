@@ -1,3 +1,4 @@
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -9,9 +10,11 @@ import 'express-async-errors';
 
 export class ChattyApplication {
   private readonly app: express.Application;
+  private readonly httpServer: http.Server;
 
-  constructor(app: express.Application) {
-    this.app = app;
+  constructor() {
+    this.app = express();
+    this.httpServer = http.createServer(this.app);
   }
 
   private setSecuirtyMiddleware() {
@@ -44,10 +47,20 @@ export class ChattyApplication {
   private setErrorHandler() {}
   private setRoutes() {}
 
+  private async startHttpServer() {
+    const port = process.env.PORT || 3000;
+
+    this.httpServer.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+  }
+
   start() {
     this.setSecuirtyMiddleware();
     this.setStandardMiddleware();
     this.setErrorHandler();
     this.setRoutes();
+
+    this.startHttpServer();
   }
 }

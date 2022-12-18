@@ -1,26 +1,8 @@
-import http from 'http';
-import mongoose from 'mongoose';
-import io from 'socket.io';
-
-import app from './app';
-import * as config from './config';
+import { ChattyApplication } from './app';
 
 async function main() {
-  // Connect to MongoDB
-  mongoose.set('strictQuery', false);
-  const conn = await mongoose.connect(config.MONGO_URI);
-  console.log(
-    `Connected to MongoDB at ${conn.connection.host}:${conn.connection.port}/${conn.connection.name}`
-  );
-
-  // Start the server
-  const server = http.createServer(app);
-  server.listen(config.PORT, () => {
-    console.log(`Server is listening on port ${config.PORT}`);
-  });
-
-  // Start socket.io
-  const socket = new io.Server(server);
+  const app = new ChattyApplication();
+  app.start();
 }
 
 main().catch((err) => {
